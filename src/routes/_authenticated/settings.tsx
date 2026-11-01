@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { PageHeader } from "@/components/AppShell";
 import { CatalogManager } from "@/components/CatalogManager";
 import { Button } from "@/components/ui/button";
-import { isLocalMode, switchStorageMode } from "@/lib/storage-mode";
+import { isLocalMode, isStandalone, switchStorageMode } from "@/lib/storage-mode";
 import { useLocalState } from "@/lib/data";
 import { exportCloud, downloadBackup } from "@/lib/cloud-export";
 import { parseBackup, mergeBackups, type Backup } from "@/lib/local-model";
@@ -247,10 +247,18 @@ function SettingsPage() {
       <section className="glass rounded-3xl p-5 space-y-4">
         <h2 className="font-semibold">安全な移行</h2>
         <ol className="list-decimal pl-5 text-sm space-y-2">
-          <li>既存クラウドでログインし、JSONをエクスポートして保管</li>
+          <li>
+            {isStandalone
+              ? "移行元で作成したJSONバックアップを保管（この公開版からクラウドには接続しません）"
+              : "既存クラウドでログインし、JSONをエクスポートして保管"}
+          </li>
           <li>端末内モードでJSONを読み込み、件数を確認して復元</li>
           <li>学習記録・復習予定・実施履歴を照合し、再読み込み後にも残ることを確認</li>
-          <li>確認が済んでから、ログイン機能の最終廃止を依頼</li>
+          <li>
+            {isStandalone
+              ? "新しい公開URLで再読み込み後もデータが残ることを確認"
+              : "確認が済んでから、ログイン機能の最終廃止を依頼"}
+          </li>
         </ol>
         {local && state.data && (
           <>
@@ -275,7 +283,11 @@ function SettingsPage() {
               onClick={() =>
                 void run(async () => {
                   await markMigrationChecked();
-                  toast.success("確認を記録しました。クラウドとログイン機能は引き続き保持します");
+                  toast.success(
+                    isStandalone
+                      ? "確認を記録しました。移行元のデータは変更していません"
+                      : "確認を記録しました。クラウドとログイン機能は引き続き保持します",
+                  );
                 })
               }
             >
@@ -285,15 +297,20 @@ function SettingsPage() {
         )}
         <p className="text-xs text-muted-foreground">
           端末ごとのデータは独立しています。同じURL・同じブラウザで利用してください。iCloud
-          DriveのJSONを別端末で復元すると手動同期できます。ログイン機能とクラウドのデータは、ご本人による移行確認まで残しています。
+          DriveのJSONを別端末で復元すると手動同期できます。
+          {isStandalone
+            ? "この公開版はログイン不要で、移行元のサイトやデータを変更しません。公開URLが変わる場合もJSONで移行してください。"
+            : "ログイン機能とクラウドのデータは、ご本人による移行確認まで残しています。"}
         </p>
-        <Button
-          variant="outline"
-          disabled={busy}
-          onClick={() => switchStorageMode(local ? "cloud" : "local")}
-        >
-          {local ? "既存クラウドに戻る" : "ログインせず端末内モードで使う"}
-        </Button>
+        {!isStandalone && (
+          <Button
+            variant="outline"
+            disabled={busy}
+            onClick={() => switchStorageMode(local ? "cloud" : "local")}
+          >
+            {local ? "既存クラウドに戻る" : "ログインせず端末内モードで使う"}
+          </Button>
+        )}
       </section>
     </div>
   );

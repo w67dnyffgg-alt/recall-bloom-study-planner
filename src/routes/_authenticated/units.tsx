@@ -28,7 +28,7 @@ function toLocalInput(d: Date) {
   return new Date(d.getTime() - off * 60000).toISOString().slice(0, 16);
 }
 
-function UnitForm({ unit, onDone }: { unit?: Unit | undefined; onDone: () => void }) {
+export function UnitForm({ unit, onDone }: { unit?: Unit | undefined; onDone: () => void }) {
   const save = useSaveUnit();
   const local = isLocalMode();
   const catalog = useLocalState();
@@ -158,8 +158,16 @@ function UnitForm({ unit, onDone }: { unit?: Unit | undefined; onDone: () => voi
                           ? await saveSubject(newName)
                           : await saveMaterial(newName, f.subject_id);
                       if (adding === "subject")
-                        setF({ ...f, subject_id: state.data.subjects.at(-1)!.id, material_id: "" });
-                      else setF({ ...f, material_id: state.data.materials.at(-1)!.id });
+                        setF((current) => ({
+                          ...current,
+                          subject_id: state.data.subjects.at(-1)!.id,
+                          material_id: "",
+                        }));
+                      else
+                        setF((current) => ({
+                          ...current,
+                          material_id: state.data.materials.at(-1)!.id,
+                        }));
                       await qc.invalidateQueries();
                       setAdding(null);
                     } catch (e) {
@@ -213,7 +221,7 @@ function UnitForm({ unit, onDone }: { unit?: Unit | undefined; onDone: () => voi
           placeholder="ポイントや苦手なところ"
         />
       </div>
-      <Button type="submit" size="lg" disabled={save.isPending}>
+      <Button type="submit" size="lg" disabled={save.isPending || addingBusy}>
         {unit ? "更新する" : "記録する"}
       </Button>
     </form>

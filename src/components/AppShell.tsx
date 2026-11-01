@@ -2,7 +2,7 @@ import { useEffect, type ReactNode } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { Home, BookOpen, CalendarDays, LogOut, Sparkles, Settings } from "lucide-react";
-import { isLocalMode, switchStorageMode } from "@/lib/storage-mode";
+import { isLocalMode, isStandalone, switchStorageMode } from "@/lib/storage-mode";
 import { useLocalState } from "@/lib/data";
 import { backupDue } from "@/lib/local-store";
 import { supabase } from "@/integrations/supabase/client";
@@ -66,23 +66,27 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </nav>
-        <button
-          onClick={signOut}
-          className="mt-auto flex items-center gap-2 rounded-2xl px-4 py-3 text-sm text-muted-foreground hover:bg-accent/60"
-        >
-          <LogOut className="size-4" /> {local ? "既存クラウドへ" : "ログアウト"}
-        </button>
+        {!isStandalone && (
+          <button
+            onClick={signOut}
+            className="mt-auto flex items-center gap-2 rounded-2xl px-4 py-3 text-sm text-muted-foreground hover:bg-accent/60"
+          >
+            <LogOut className="size-4" /> {local ? "既存クラウドへ" : "ログアウト"}
+          </button>
+        )}
       </aside>
 
       <main className="flex-1 min-w-0 px-5 pt-8 pb-32 md:px-10 md:pb-12 md:pt-10 max-w-5xl mx-auto w-full">
-        <div className="flex justify-end md:hidden -mt-2 mb-2">
-          <button
-            onClick={signOut}
-            className="text-xs text-muted-foreground flex items-center gap-1"
-          >
-            <LogOut className="size-3.5" /> {local ? "既存クラウドへ" : "ログアウト"}
-          </button>
-        </div>
+        {!isStandalone && (
+          <div className="flex justify-end md:hidden -mt-2 mb-2">
+            <button
+              onClick={signOut}
+              className="text-xs text-muted-foreground flex items-center gap-1"
+            >
+              <LogOut className="size-3.5" /> {local ? "既存クラウドへ" : "ログアウト"}
+            </button>
+          </div>
+        )}
         <p className="mb-4 text-xs text-muted-foreground">
           {local ? "端末内保存 · このブラウザに保存" : "既存クラウド · 移行前のデータ"}
         </p>
