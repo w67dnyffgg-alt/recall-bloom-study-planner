@@ -14,7 +14,89 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      review_logs: {
+        Row: {
+          id: string
+          result: string
+          reviewed_at: string
+          scheduled_at: string | null
+          stage_after: number
+          stage_before: number
+          unit_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          result: string
+          reviewed_at?: string
+          scheduled_at?: string | null
+          stage_after: number
+          stage_before: number
+          unit_id: string
+          user_id?: string
+        }
+        Update: {
+          id?: string
+          result?: string
+          reviewed_at?: string
+          scheduled_at?: string | null
+          stage_after?: number
+          stage_before?: number
+          unit_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_logs_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "study_units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      study_units: {
+        Row: {
+          created_at: string
+          id: string
+          material: string
+          memo: string
+          next_review_at: string | null
+          pages: string
+          stage: number
+          studied_at: string
+          subject: string
+          unit_name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          material?: string
+          memo?: string
+          next_review_at?: string | null
+          pages?: string
+          stage?: number
+          studied_at?: string
+          subject: string
+          unit_name: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          material?: string
+          memo?: string
+          next_review_at?: string | null
+          pages?: string
+          stage?: number
+          studied_at?: string
+          subject?: string
+          unit_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
