@@ -12,4 +12,24 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    // Pre-bundle deps used by signed-in pages up front, so opening a page for the
+    // first time doesn't trigger a dependency re-optimization + reload that leaves
+    // the browser importing stale module URLs ("Importing a module script failed").
+    optimizeDeps: {
+      include: [
+        "@supabase/supabase-js",
+        "@lovable.dev/cloud-auth-js",
+        "@tanstack/react-query",
+        "@radix-ui/react-slot",
+        "@radix-ui/react-dialog",
+        "@radix-ui/react-label",
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge",
+        "lucide-react",
+        "sonner",
+      ],
+    },
+  },
 });
