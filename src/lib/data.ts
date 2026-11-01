@@ -61,7 +61,7 @@ export function useLogs() {
 export function useSaveUnit() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, input }: { id?: string; input: UnitInput }) => {
+    mutationFn: async ({ id, input }: { id?: string | undefined; input: UnitInput }) => {
       const base = {
         subject: input.subject,
         material: input.material,

@@ -12,7 +12,7 @@ import { fmtDateTime, useDeleteUnit, useSaveUnit, useUnits, type Unit } from "@/
 import { FINAL_STAGE, INTERVAL_LABELS } from "@/lib/srs";
 
 export const Route = createFileRoute("/_authenticated/units")({
-  validateSearch: (s: Record<string, unknown>) => ({ new: s.new === true || s.new === "true" ? true : undefined }),
+  validateSearch: (s: Record<string, unknown>): { new?: boolean } => (s["new"] === true || s["new"] === "true" ? { new: true } : {}),
   head: () => ({ meta: [{ title: "学習記録 | Rememo" }] }),
   component: UnitsPage,
 });
@@ -22,7 +22,7 @@ function toLocalInput(d: Date) {
   return new Date(d.getTime() - off * 60000).toISOString().slice(0, 16);
 }
 
-function UnitForm({ unit, onDone }: { unit?: Unit; onDone: () => void }) {
+function UnitForm({ unit, onDone }: { unit?: Unit | undefined; onDone: () => void }) {
   const save = useSaveUnit();
   const [f, setF] = useState({
     subject: unit?.subject ?? "",
@@ -37,7 +37,7 @@ function UnitForm({ unit, onDone }: { unit?: Unit; onDone: () => void }) {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!f.subject.trim() || !f.unit_name.trim()) return toast.error("科目名と単元名は必須です");
+    if (!f.subject.trim() || !f.unit_name.trim()) { toast.error("科目名と単元名は必須です"); return; }
     try {
       await save.mutateAsync({ id: unit?.id, input: { ...f, studied_at: new Date(f.studied_at) } });
       toast.success(unit ? "更新しました" : "記録しました。1時間後に最初の復習です");
@@ -97,7 +97,7 @@ function UnitsPage() {
     if (openNew) {
       setEditing(null);
       setOpen(true);
-      navigate({ to: "/units", search: {}, replace: true });
+      navigate({ to: "/units", search: () => ({}), replace: true });
     }
   }, [openNew, navigate]);
 

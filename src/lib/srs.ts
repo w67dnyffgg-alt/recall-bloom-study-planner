@@ -39,5 +39,5 @@ export function applyReview(
   else next = 0;
 
   if (next >= FINAL_STAGE) return { stage: FINAL_STAGE, nextReviewAt: null };
-  return { stage: next, nextReviewAt: new Date(now.getTime() + INTERVALS_MS[next]) };
+  return { stage: next, nextReviewAt: new Date(now.getTime() + (INTERVALS_MS[next] ?? 0)) };
 }
