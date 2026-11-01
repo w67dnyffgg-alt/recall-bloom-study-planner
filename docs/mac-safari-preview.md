@@ -1,3 +1,5 @@
+> 現在はGitHub Pages向け構成へ移行しています。この文書は以前の構成の記録です。最新手順は [GitHub Pages](./github-pages.md) を参照してください。
+
 # MacのSafariで試す手順（無料）
 
 今回の改修は `codex/local-preview-20261101` ブランチで試します。画面上のアプリ名は **Rememo** です。GitHubへコードを保存すること、Codexの環境を公開すること、Lovableの公開サイトを更新することは別の操作です。この手順ではLovableを公開・更新せず、クラウドの学習データも変更しません。

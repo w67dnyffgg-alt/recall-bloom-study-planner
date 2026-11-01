@@ -3,6 +3,7 @@ import {
   createRootRouteWithContext,
   createRoute,
   createRouter,
+  createHashHistory,
   Outlet,
   HeadContent,
   redirect,
@@ -27,13 +28,13 @@ const root = createRootRouteWithContext<{ queryClient: QueryClient }>()({
     <main className="p-8">
       <h1>画面を読み込めませんでした</h1>
       <p>ページを再読み込みしてください。保存データは削除しないでください。</p>
-      <a href="/home">ホームへ戻る</a>
+      <a href="#/home">ホームへ戻る</a>
     </main>
   ),
   notFoundComponent: () => (
     <main className="p-8">
       <p>ページが見つかりません</p>
-      <a href="/home">ホームへ戻る</a>
+      <a href="#/home">ホームへ戻る</a>
     </main>
   ),
 });
@@ -86,4 +87,9 @@ const routeTree = root.addChildren([
   app.addChildren([home, units, calendar, settings]),
 ]);
 export const createStandaloneRouter = (queryClient: QueryClient) =>
-  createRouter({ routeTree, context: { queryClient }, scrollRestoration: true });
+  createRouter({
+    routeTree,
+    history: createHashHistory(),
+    context: { queryClient },
+    scrollRestoration: true,
+  });

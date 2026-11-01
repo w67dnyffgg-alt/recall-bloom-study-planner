@@ -4,16 +4,19 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
-    "build:dev": "vite build --mode development",
-    "preview": "vite preview",
+    "dev": "vite --config vite.static.config.ts",
+    "build": "vite build --config vite.static.config.ts && node scripts/prepare-static.mjs",
+    "build:dev": "vite build --config vite.static.config.ts --mode development && node scripts/prepare-static.mjs",
+    "preview": "vite preview --config vite.static.config.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "build:pages": "vite build --config vite.pages.config.ts && node scripts/prepare-pages.mjs",
-    "preview:pages": "vite preview --config vite.pages.config.ts --host 127.0.0.1 --port 4173 --strictPort"
+    "build:pages": "bun run build",
+    "preview:pages": "vite preview --config vite.static.config.ts --host 127.0.0.1 --port 4173 --strictPort",
+    "dev:legacy": "vite dev --config vite.config.ts",
+    "build:legacy": "vite build --config vite.config.ts",
+    "preview:legacy": "vite preview --config vite.config.ts"
   },
   "overrides": {
     "rolldown": "1.2.1"

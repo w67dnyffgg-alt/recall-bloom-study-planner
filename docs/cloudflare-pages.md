@@ -1,3 +1,5 @@
+> 現在はGitHub Pages向け構成へ移行しています。この文書は以前の構成の記録です。最新手順は [GitHub Pages](./github-pages.md) を参照してください。
+
 # Codexで開発する独立公開版
 
 ## 方針と現在の状態
